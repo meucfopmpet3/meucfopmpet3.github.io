@@ -666,7 +666,7 @@ async function renderDocuments(searchTerm = "") {
 
 function renderGrades() {
   const grades = (userState && userState.grades) ? userState.grades : {};
-  const grades = userState.grades || {};
+  
   gradesContainer.innerHTML = "";
   subjectList.sort().forEach((subject) => {
     const value = userState.grades[subject] || 0;
