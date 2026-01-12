@@ -1,8 +1,8 @@
 // =======================================================
 // 1. CONFIGURAÇÃO DO SUPABASE
 // =======================================================
-const SUPABASE_URL = 'https://svijubigtigsrpfqzcgf.supabase.co'; 
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2aWp1YmlndGlnc3JwZnF6Y2dmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MjMwMDAsImV4cCI6MjA3NDM5OTAwMH0.Ar58k3Hfe25v2xqkhpdffQXMJkQXTTOnMkyMJiH8e9k';
+const SUPABASE_URL = 'https://fpecfovtilicbcqovqcs.supabase.co'; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwZWNmb3Z0aWxpY2JjcW92cWNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyMjIxOTEsImV4cCI6MjA4Mzc5ODE5MX0.vA63ZwIZmUh9R7lP0TZqV5Ank1wH7Nx5pAr8sBwIeBA';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -573,7 +573,7 @@ function renderDashboard() {
 
 function updateTimeProgress() {
   const today = new Date();
-  const graduationDate = new Date("2026-05-26T00:00:00");
+  const graduationDate = new Date('2027-01-05T00:00:00');
   const totalDays = 365;
   const daysLeft = Math.ceil((graduationDate - today) / (1000 * 60 * 60 * 24));
   const daysPassed = Math.max(
@@ -588,52 +588,6 @@ function updateTimeProgress() {
     1
   )}%</span> do curso concluído`;
   checkAchievements("time_update", { percentage, days_left: daysLeft });
-}
-
-// =======================================================
-// FUNÇÕES DA PÁGINA DE JOGOS
-// =======================================================
-
-// Lista de jogos disponíveis
-const games = [
-    {
-        id: 'desafio-cfo',
-        title: 'Desafio CFO',
-        description: 'Teste os seus conhecimentos sobre o Estatuto e a Lei Orgânica num desafio de velocidade e precisão.',
-        url: 'game/desafio-cfo.html'
-    },
-    {
-        id: 'lpmo',
-        title: 'Quiz LPMO',
-        description: 'Um jogo de perguntas e respostas para treinar os seus conhecimentos sobre a Lei de Promoção de Oficiais.',
-        url: 'game/LPMO.html'
-    }
-];
-
-// Função para desenhar os cartões dos jogos na tela
-// Versão corrigida que abre numa nova aba
-function renderGames() {
-    if (!gamesList) return;
-    gamesList.innerHTML = ''; 
-
-    games.forEach(game => {
-        const card = document.createElement('div');
-        card.className = 'doc-card'; 
-        card.style.cursor = 'pointer';
-        
-        card.innerHTML = `
-            <div class="doc-icon">🎮</div>
-            <div class="doc-title">${game.title}</div>
-            <div class="doc-desc" style="display: block !important;">${game.description}</div>
-        `;
-        
-        // CORREÇÃO: Em vez de chamar openGame, abrimos a URL diretamente
-        card.addEventListener('click', () => {
-            window.open(game.url, '_blank');
-        });
-        
-        gamesList.appendChild(card);
-    });
 }
 
 // --- Renderização de DOCUMENTOS GLOBAIS ---
