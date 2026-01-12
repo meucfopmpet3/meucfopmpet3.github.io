@@ -111,14 +111,7 @@ let disciplineStatusChart = null; // Para guardar a instância do gráfico
 let workloadStatusChart = null; // Para guardar a instância do gráfico
 
 // Elementos do Ranking
-const saveBattalionsButton = document.getElementById("save-battalions-button");
-const battalionSelect1 = document.getElementById("battalion-select-1");
-const battalionSelect2 = document.getElementById("battalion-select-2");
-const battalionSelect3 = document.getElementById("battalion-select-3");
-const showGlobalRankingButton = document.getElementById("show-global-ranking");
-const showBattalionRankingButton = document.getElementById(
-  "show-battalion-ranking"
-);
+
 const rankingMessage = document.getElementById("ranking-message");
 
 // Elementos do Módulo de Jogos
