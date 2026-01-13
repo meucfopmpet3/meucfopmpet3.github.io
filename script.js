@@ -111,7 +111,14 @@ let disciplineStatusChart = null; // Para guardar a instância do gráfico
 let workloadStatusChart = null; // Para guardar a instância do gráfico
 
 // Elementos do Ranking
-
+const saveBattalionsButton = document.getElementById("save-battalions-button");
+const battalionSelect1 = document.getElementById("battalion-select-1");
+const battalionSelect2 = document.getElementById("battalion-select-2");
+const battalionSelect3 = document.getElementById("battalion-select-3");
+const showGlobalRankingButton = document.getElementById("show-global-ranking");
+const showBattalionRankingButton = document.getElementById(
+  "show-battalion-ranking"
+);
 const rankingMessage = document.getElementById("ranking-message");
 
 // Elementos do Módulo de Jogos
@@ -123,7 +130,7 @@ const backToGamesButton = document.getElementById('back-to-games');
 // =======================================================
 // 3. DADOS ESTÁTICOS
 // =======================================================
-const COURSE_START_DATE = new Date("2026-01-05T00:00:00");
+const COURSE_START_DATE = new Date("2026-01-12T00:00:00");
 const subjectList = [
   "Sistema de Segurança Pública",
   "Teoria Geral da Administração",
@@ -566,28 +573,67 @@ function renderDashboard() {
 
 function updateTimeProgress() {
   const today = new Date();
-  const graduationDate = new Date('2027-01-05T00:00:00');
+  const graduationDate = new Date("2026-05-26T00:00:00");
   const totalDays = 365;
-  
-  // Calcula dias restantes
   const daysLeft = Math.ceil((graduationDate - today) / (1000 * 60 * 60 * 24));
-  
-  // Calcula dias passados (Aqui usará a nova COURSE_START_DATE)
   const daysPassed = Math.max(
     0,
     Math.floor((today - COURSE_START_DATE) / (1000 * 60 * 60 * 24))
   );
-
   daysLeftEl.textContent = daysLeft > 0 ? daysLeft : 0;
   daysPassedEl.textContent = daysPassed >= 0 ? daysPassed : 0;
-
-  // Cálculo da porcentagem (7 dias / 365 ≈ 1.9%)
   const percentage = Math.min(100, (daysPassed / totalDays) * 100);
-  
   courseProgressBar.style.width = `${percentage}%`;
-  coursePercentageEl.innerHTML = `<span>${percentage.toFixed(1)}%</span> do curso concluído`;
-  
+  coursePercentageEl.innerHTML = `<span>${percentage.toFixed(
+    1
+  )}%</span> do curso concluído`;
   checkAchievements("time_update", { percentage, days_left: daysLeft });
+}
+
+// =======================================================
+// FUNÇÕES DA PÁGINA DE JOGOS
+// =======================================================
+
+// Lista de jogos disponíveis
+const games = [
+    {
+        id: 'desafio-cfo',
+        title: 'Desafio CFO',
+        description: 'Teste os seus conhecimentos sobre o Estatuto e a Lei Orgânica num desafio de velocidade e precisão.',
+        url: 'game/desafio-cfo.html'
+    },
+    {
+        id: 'lpmo',
+        title: 'Quiz LPMO',
+        description: 'Um jogo de perguntas e respostas para treinar os seus conhecimentos sobre a Lei de Promoção de Oficiais.',
+        url: 'game/LPMO.html'
+    }
+];
+
+// Função para desenhar os cartões dos jogos na tela
+// Versão corrigida que abre numa nova aba
+function renderGames() {
+    if (!gamesList) return;
+    gamesList.innerHTML = ''; 
+
+    games.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'doc-card'; 
+        card.style.cursor = 'pointer';
+        
+        card.innerHTML = `
+            <div class="doc-icon">🎮</div>
+            <div class="doc-title">${game.title}</div>
+            <div class="doc-desc" style="display: block !important;">${game.description}</div>
+        `;
+        
+        // CORREÇÃO: Em vez de chamar openGame, abrimos a URL diretamente
+        card.addEventListener('click', () => {
+            window.open(game.url, '_blank');
+        });
+        
+        gamesList.appendChild(card);
+    });
 }
 
 // --- Renderização de DOCUMENTOS GLOBAIS ---
@@ -658,8 +704,6 @@ async function renderDocuments(searchTerm = "") {
 }
 
 function renderGrades() {
-  const grades = (userState && userState.grades) ? userState.grades : {};
-  
   gradesContainer.innerHTML = "";
   subjectList.sort().forEach((subject) => {
     const value = userState.grades[subject] || 0;
@@ -1413,10 +1457,6 @@ function handlePageNavigation(e) {
   }
 }
 
-function renderGames() {
-    console.log("Sistema de jogos ainda não implementado para a T3.");
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   checkSession();
   loginButton.addEventListener("click", handleLogin);
@@ -1591,7 +1631,52 @@ document.addEventListener("DOMContentLoaded", () => {
   // =======================================================
   // 7. EVENT LISTENERS PARA O NOVO RANKING
   // =======================================================
-  // --- Listeners para o Modal de Progresso do Curso ---
+  saveBattalionsButton.addEventListener("click", async () => {
+    const {
+      data: { user },
+    } = await sb.auth.getUser();
+    if (!user) return;
+
+    const updates = {
+      batalhao_1: battalionSelect1.value || null,
+      batalhao_2: battalionSelect2.value || null,
+      batalhao_3: battalionSelect3.value || null,
+    };
+
+    const { error } = await sb
+      .from("profiles")
+      .update(updates)
+      .eq("id", user.id);
+
+    if (error) {
+      rankingMessage.textContent = "Erro ao salvar.";
+      rankingMessage.style.color = "var(--sl-error)";
+      console.error("Erro ao salvar batalhões:", error);
+    } else {
+      rankingMessage.textContent = "Batalhões salvos!";
+      rankingMessage.style.color = "var(--sl-success)";
+      // Re-renderiza o ranking de batalhões se estiver ativo
+      if (showBattalionRankingButton.classList.contains("active")) {
+        renderBattalionRankings();
+      }
+    }
+    setTimeout(() => {
+      rankingMessage.textContent = "";
+    }, 3000);
+  });
+
+  showGlobalRankingButton.addEventListener("click", () => {
+    showGlobalRankingButton.classList.add("active");
+    showBattalionRankingButton.classList.remove("active");
+    renderRanking();
+  });
+
+  showBattalionRankingButton.addEventListener("click", () => {
+    showBattalionRankingButton.classList.add("active");
+    showGlobalRankingButton.classList.remove("active");
+    renderRanking();
+  });
+// --- Listeners para o Modal de Progresso do Curso ---
         const showProgressModalButton = document.getElementById('show-progress-modal-button');
         const courseProgressModal = document.getElementById('course-progress-modal');
         const courseProgressModalClose = document.getElementById('course-progress-modal-close');
