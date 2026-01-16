@@ -1449,8 +1449,7 @@ function handlePageNavigation(e) {
   if (targetPageId === "page-links") renderLinks();
   if (targetPageId === "page-documents") renderDocuments();
   if (targetPageId === 'page-missions') renderScheduledMissions();
-  if (targetPageId === 'page-games') renderGames();
-
+  
   if (window.innerWidth <= 768) {
     sidebar.classList.remove("open");
     sidebarOverlay.classList.add("hidden");
