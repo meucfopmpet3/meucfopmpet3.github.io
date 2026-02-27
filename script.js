@@ -194,9 +194,9 @@ const qtsTimes = [
 ];
 const achievementsData = {
   ASP26: {
-    name: "Aspirante 2026",
+    name: "Aspirante 2027",
     icon: "⭐",
-    description: "Fazer parte da turma de Aspirantes de 2026.",
+    description: "Fazer parte da turma de Aspirantes de 2027.",
     condition: () => true,
   },
   MAPOM: {
