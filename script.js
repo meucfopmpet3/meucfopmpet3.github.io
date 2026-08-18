@@ -200,10 +200,16 @@ const achievementsData = {
     condition: () => true,
   },
   MAPOM: {
-    name: "MAPOM",
-    icon: "🗺️",
-    description: "Concluir o Módulo de Adaptação Policial-Militar.",
+    name: "MAPOM URBANO",
+    icon: "🏴‍☠️",
+    description: "PARABÉNS POR TER VENCIDO A ETAPA DO MAPOM URBANO.",
     condition: () => true,
+  },
+  MAPOM2: {
+    name: "MAPOM RURAL",
+    icon: "🌵",
+    description: "PARABÉNS POR TER VENCIDO O MAPOM DO SERTÃO, A ESTRELA ESTÁ MUITO PRÓXIMA",
+    condition: () => false,
   },
   ESPADIM: {
     name: "Espadim",
